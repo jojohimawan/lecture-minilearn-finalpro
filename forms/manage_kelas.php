@@ -9,8 +9,7 @@
 
     $loggeduser = $_SESSION['usernamedsn'];
     $dosen = queryRead("SELECT * FROM dosen WHERE username = '$loggeduser'");
-    $enrolled = queryReadAll("SELECT * FROM kelas_mahasiswa WHERE nip = '{$_SESSION["nip"]}'");
-    // var_dump($enrolled); die;
+    $kelas = queryReadAll("SELECT * FROM kelas WHERE nip = '{$_SESSION["nip"]}'");
     $mhscount = getRowCount("SELECT * FROM kelas_mahasiswa WHERE nip = '{$_SESSION["nip"]}'");
     $classcount = getRowCount("SELECT * FROM kelas WHERE nip = '{$_SESSION["nip"]}'");
 ?>
@@ -38,15 +37,15 @@
     <div class="h-full px-3 py-8 overflow-y-auto bg-white border-r">
         <ul class="font-medium">
             <li>
-                <a href="#" class="flex items-center p-5 text-white rounded-lg hover:bg-green-700 bg-green-600 mb-2">
-                <svg aria-hidden="true" class="w-6 h-6 text-gray-500" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+                <a href="./../homepages/home_dsn.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
+                <svg aria-hidden="true" class="w-6 h-6 text-gray-500 transition duration-75 group-medium:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
                 <span class="ml-3">Dashboard</span>
                 </a>
             </li>
             <li>
-                <a href="./../forms/manage_kelas.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
-                <svg aria-hidden="true" class="w-6 h-6 text-gray-500 transition duration-75 group-medium:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-                <span class="ml-3">Manage Kelas</span>
+                <a href="#" class="flex items-center p-5 text-white rounded-lg hover:bg-green-700 bg-green-600 mb-2">
+                <svg aria-hidden="true" class="w-6 h-6 text-gray-500" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+                <span class="ml-3">Manajemen Kelas</span>
                 </a>
             </li>
             <li>
@@ -133,7 +132,7 @@
         </div>
 
         <div class="text-2xl text-slate-900 font-semibold mb-8">
-            Daftar Mahasiswa yang Diampu:
+            Daftar Kelas Diampu:
         </div>
 
         <div class="table-read bg-white p-5 rounded-lg">
@@ -142,43 +141,37 @@
                     <thead class="text-s text-slate-700 uppercase bg-slate-100">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                Nama
+                                Nama Kelas
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                NRP
+                                SKS
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Kelas
+                                Mahasiswa Diampu
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Nilai
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Edit Nilai
+                                Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($enrolled as $enr) : ?>
+                    <?php foreach($kelas as $kls) : ?>
                         <tr class="bg-white border-b hover:bg-green-50">
                             <td class="px-6 py-4 font-medium text-base text-slate-500">
-                                <?php $result = queryRead("SELECT nama FROM mahasiswa WHERE nrp = '{$enr["nrp"]}'"); echo $result['nama'] ?>
+                                <?= $kls['nama_kelas'] ?>
                             </td>
                             <td class="px-6 py-4 font-medium text-base text-slate-500">
-                                <?= $enr['nrp'] ?>
+                                <?= $kls['sks'] ?>
                             </td>
                             <td class="px-6 py-4 font-medium text-base text-slate-500">
-                                <?php $result = queryRead("SELECT nama_kelas FROM kelas WHERE id_kelas = '{$enr["id_kelas"]}'"); echo $result['nama_kelas'] ?>
-                            </td>
-                            <td class="px-6 py-4 font-medium text-base text-slate-500">
-                                <?= $enr['nilai'] ?>
+                                <?php $diampu = getRowCount("SELECT * FROM kelas_mahasiswa WHERE id_kelas = '{$kls["id_kelas"]}'"); echo $diampu ?>
                             </td>
                             <td class="px-6 py-4 font-medium text-base text-slate-500 flex flex-row gap-x-2">
-                                <a href="./../forms/update_mhs.php?id_km=<?= $enr['id_km']?>" type="button" class="flex gap-x-2 items-center justify-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 ">Edit <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <a href="./update_kelas.php?id_kelas=<?= $kls['id_kelas']?>" type="button" class="flex gap-x-2 items-center justify-center focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 ">Edit <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                         <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
                                         </svg>
                                 </a>
-                                <a href="./../forms/delete_mhs.php?id_km=<?= $enr["id_km"] ?>" onclick="return confirm('Yakin menghapus?')" type="button" class="flex gap-x-2 items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Delete <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                <a href="./delete_kelas.php?id_kelas=<?= $kls["id_kelas"] ?>" onclick="return confirm('Yakin menghapus?')" type="button" class="flex gap-x-2 items-center focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Delete <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                     <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                                         </svg>
                                 </a>

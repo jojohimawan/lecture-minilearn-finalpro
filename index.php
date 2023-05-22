@@ -29,7 +29,7 @@
         </button>
       </div>
       <div class="hidden lg:flex lg:gap-x-12">
-        <h1 class="text-xl font-bold text-slate-900">Simple eLearning</h1>
+        <h1 class="text-xl font-bold text-slate-900">MiniLearn - A Minimalist eLearning</h1>
       </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="text-center">
-        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Selamat Datang di Aplikasi eLearning Sederhana</h1>
+        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Selamat Datang di Aplikasi MiniLearn</h1>
         <p class="mt-6 text-lg leading-8 text-gray-600">Silahkan login sebagai dosen atau sebagai mahasiswa</p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
           <a href="./auth/login_dsn.php" class="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Login Dosen</a>

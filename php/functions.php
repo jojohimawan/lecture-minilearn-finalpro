@@ -217,6 +217,20 @@ function queryUpdateNilai($data)
     return mysqli_affected_rows($conn);
 }
 
+function queryUpdateKelas($data)
+{
+    global $conn;
+
+    $id_kelas = $data['id_kelas'];
+    $nama_kelas = $data['nama_kelas'];
+    $sks = $data['sks'];
+
+    $query = "UPDATE kelas SET nama_kelas = '$nama_kelas', sks = '$sks' WHERE id_kelas = '$id_kelas'";
+    mysqli_query($conn, $query);
+
+    return mysqli_affected_rows($conn);
+}
+
 function queryDeleteNilai($id)
 {
     global $conn;
@@ -232,6 +246,16 @@ function getRowCount($query)
     $rowcount = mysqli_num_rows(mysqli_query($conn, $query));
 
     return $rowcount;
+}
+
+function queryDeleteKelas($id_kelas)
+{
+    global $conn;
+
+    mysqli_query($conn, "DELETE FROM kelas_mahasiswa WHERE id_kelas = $id_kelas");
+    mysqli_query($conn, "DELETE FROM KELAS WHERE id_kelas = $id_kelas");
+
+    return mysqli_affected_rows($conn);
 }
 
 ?>

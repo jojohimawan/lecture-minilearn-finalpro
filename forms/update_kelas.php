@@ -8,21 +8,25 @@
     require_once "./../php/functions.php";
 
     $loggeduser = $_SESSION['usernamedsn'];
-   $dosen = queryRead("SELECT * FROM dosen WHERE username = '$loggeduser'");
-   $rowcount = getRowCount("SELECT * FROM kelas_mahasiswa WHERE nip = '{$_SESSION["nip"]}'");
+    $dosen = queryRead("SELECT * FROM dosen WHERE username = '$loggeduser'");
 
+    $id_kelas = $_GET['id_kelas'];
+    $kelas = queryRead("SELECT * FROM kelas WHERE id_kelas = $id_kelas");
+    $rowcount = getRowCount("SELECT * FROM kelas_mahasiswa WHERE nip = '{$_SESSION["nip"]}'");
 
     if(isset($_POST['submit'])) {
-        if(queryCreateKelas($_POST) > 0) {
+        if(queryUpdateKelas($_POST) > 0) {
             echo 
                 '<script> 
-                alert("Sukses")
+                alert("Sukses edit kelas")
+                document.location.href = "./../homepages/home_dsn.php"
                 </script>
             ';
         } else {
             echo 
                 '<script> 
-                alert("Gagal")
+                alert("Gagal edit kelas")
+                document.location.href = "./../homepages/home_dsn.php"
                 </script>
             ';
         }
@@ -58,9 +62,17 @@
                 </a>
             </li>
             <li>
-                <a href="./manage_kelas.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
+                <a href="./../forms/manage_kelas.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
                 <svg aria-hidden="true" class="w-6 h-6 text-gray-500 transition duration-75 group-medium:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
                 <span class="ml-3">Manage Kelas</span>
+                </a>
+            </li>
+            <li>
+                <a href="./buat_kelas.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-gray-500 transition duration-75">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
+                </svg>
+                <span class="ml-3">Buat Kelas</span>
                 </a>
             </li>
             <li>
@@ -68,15 +80,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6 text-gray-500 transition duration-75">
                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
                 </svg>
-                <span class="ml-3">Buat Kelas</span>
-                </a>
-            </li>
-            <li>
-                <a href="./tambah_mhs.php" class="flex items-center p-5 text-slate-500 rounded-lg hover:bg-slate-100 mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-gray-500 transition duration-75">
-                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
-                </svg>
-                <span class="ml-3">Tambah Mahasiswa</span>
+                <span class="ml-3">Edit Kelas</span>
                 </a>
             </li>
             <li>
@@ -130,16 +134,20 @@
         </div>
 
         <form action="" method="post" class="p-4">
+        <div class="mb-6">
+                <label for="id_kelas" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                <input type="hidden" id="id_kelas" name="id_kelas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="<?= $kelas['id_kelas'] ?>" required>
+            </div>
             <div class="mb-6">
-                <label for="namakelas" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mata Kuliah</label>
-                <input type="text" id="namakelas" name="namakelas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <label for="nama_kelas" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Kelas</label>
+                <input type="text" id="nama_kelas" name="nama_kelas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="<?= $kelas['nama_kelas'] ?>" required>
             </div>
             <div class="mb-6">
                 <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">SKS</label>
-                <input type="text" id="sks" name="sks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <input type="text" id="sks" name="sks" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="<?= $kelas['sks'] ?>" required>
             </div>
             
-            <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center gap-x-3" name="submit">Buat Kelas</button>
+            <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center gap-x-3" name="submit">Update Kelas</button>
         </form>
     </div>
 
